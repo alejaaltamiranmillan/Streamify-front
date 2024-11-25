@@ -1,6 +1,8 @@
 import Login from './pages/auth/login';
 import HomePage from './pages/HomePage';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import UserPage from './pages/UserPage';
+import UploadVideo from './pages/UploadVideo';
 
 function App() {
 
@@ -13,6 +15,8 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/HomePage" element={<HomePage />} />
       <Route path='/login' element={<Login/>}/>
+      <Route path='/UserPage' element={<UserPage/>}/>
+      <Route path='/UploadVideo' element={<UploadVideo/>}/>
 
     </Routes>
 

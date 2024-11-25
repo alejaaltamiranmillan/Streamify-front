@@ -8,12 +8,12 @@ export default function Login() {
   const [isLogin, setIsLogin] = useState(true)
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 via-pink-100 to-blue-200 p-4">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white shadow-2xl rounded-2xl overflow-hidden"
+        className="w-full max-w-md bg-white shadow-xl rounded-2xl overflow-hidden"
       >
         <div className="p-8 sm:p-12">
           <motion.div
@@ -22,9 +22,9 @@ export default function Login() {
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
             className="mb-8 text-center"
           >
-            <Play className="text-purple-600 w-16 h-16 mb-4 mx-auto" />
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">Streamify</h1>
-            <p className="text-gray-500">Accede a tu cuenta o regístrate</p>
+            <Play className="text-blue-500 w-16 h-16 mb-4 mx-auto" />
+            <h1 className="text-4xl font-bold text-blue-800 mb-2">Streamify</h1>
+            <p className="text-blue-600">Accede a tu cuenta o regístrate</p>
           </motion.div>
           <div className="space-y-6">
             {/* Tabs */}
@@ -32,8 +32,8 @@ export default function Login() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`w-1/2 pb-2 font-semibold text-gray-600 ${
-                  isLogin ? "border-b-2 border-purple-600 text-purple-600" : ""
+                className={`w-1/2 pb-2 font-semibold text-blue-600 ${
+                  isLogin ? "border-b-2 border-blue-500 text-blue-700" : ""
                 }`}
                 onClick={() => setIsLogin(true)}
               >
@@ -42,8 +42,8 @@ export default function Login() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`w-1/2 pb-2 font-semibold text-gray-600 ${
-                  !isLogin ? "border-b-2 border-purple-600 text-purple-600" : ""
+                className={`w-1/2 pb-2 font-semibold text-blue-600 ${
+                  !isLogin ? "border-b-2 border-blue-500 text-blue-700" : ""
                 }`}
                 onClick={() => setIsLogin(false)}
               >
@@ -63,7 +63,7 @@ export default function Login() {
                 {isLogin ? (
                   <form className="space-y-5">
                     <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="email" className="block text-sm font-medium text-blue-700">
                         Correo Electrónico
                       </label>
                       <div className="relative">
@@ -72,13 +72,13 @@ export default function Login() {
                           type="email"
                           placeholder="tu@email.com"
                           required
-                          className="w-full pl-10 pr-3 py-2 border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                          className="w-full pl-10 pr-3 py-2 border-blue-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
                         />
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="password" className="block text-sm font-medium text-blue-700">
                         Contraseña
                       </label>
                       <div className="relative">
@@ -87,16 +87,16 @@ export default function Login() {
                           type="password"
                           placeholder="********"
                           required
-                          className="w-full pl-10 pr-3 py-2 border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                          className="w-full pl-10 pr-3 py-2 border-blue-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
                         />
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
                       </div>
                     </div>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-medium py-2 rounded-lg transition shadow-md hover:shadow-lg"
+                      className="w-full bg-gradient-to-r from-blue-400 to-pink-400 hover:from-blue-500 hover:to-pink-500 text-white font-medium py-2 rounded-lg transition shadow-md hover:shadow-lg"
                     >
                       Iniciar Sesión
                     </motion.button>
@@ -104,7 +104,7 @@ export default function Login() {
                 ) : (
                   <form className="space-y-5">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="name" className="block text-sm font-medium text-blue-700">
                         Nombre
                       </label>
                       <div className="relative">
@@ -113,13 +113,13 @@ export default function Login() {
                           type="text"
                           placeholder="Tu nombre"
                           required
-                          className="w-full pl-10 pr-3 py-2 border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                          className="w-full pl-10 pr-3 py-2 border-blue-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
                         />
-                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="email" className="block text-sm font-medium text-blue-700">
                         Correo Electrónico
                       </label>
                       <div className="relative">
@@ -128,13 +128,13 @@ export default function Login() {
                           type="email"
                           placeholder="tu@email.com"
                           required
-                          className="w-full pl-10 pr-3 py-2 border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                          className="w-full pl-10 pr-3 py-2 border-blue-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
                         />
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                      <label htmlFor="password" className="block text-sm font-medium text-blue-700">
                         Contraseña
                       </label>
                       <div className="relative">
@@ -143,16 +143,16 @@ export default function Login() {
                           type="password"
                           placeholder="********"
                           required
-                          className="w-full pl-10 pr-3 py-2 border-gray-300 rounded-lg shadow-sm focus:ring-purple-500 focus:border-purple-500"
+                          className="w-full pl-10 pr-3 py-2 border-blue-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-blue-50"
                         />
-                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" size={18} />
                       </div>
                     </div>
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       type="submit"
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white font-medium py-2 rounded-lg transition shadow-md hover:shadow-lg"
+                      className="w-full bg-gradient-to-r from-blue-400 to-pink-400 hover:from-blue-500 hover:to-pink-500 text-white font-medium py-2 rounded-lg transition shadow-md hover:shadow-lg"
                     >
                       Registrarse
                     </motion.button>
@@ -166,3 +166,4 @@ export default function Login() {
     </div>
   )
 }
+

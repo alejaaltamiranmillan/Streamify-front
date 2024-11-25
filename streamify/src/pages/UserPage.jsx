@@ -68,14 +68,14 @@ const HeroSection = () => (
         transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
       >
         <button className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
-          Comienza tu aventura
+          ¡Comienza a subir videos!
         </button>
       </motion.div>
     </div>
   </motion.div>
 );
 
-const HomePage = () => {
+const UserPage = () => {
   const navigate = useNavigate();
   const [videos] = useState([
     { id: 1, title: 'Cómo hacer un pastel', thumbnail: '/placeholder.svg?height=120&width=200' },
@@ -120,16 +120,10 @@ const HomePage = () => {
             transition={{ duration: 0.5 }}
           >
             <button
-              onClick={() => navigate('/login')}
-              className="px-4 py-2 text-sm border border-blue-300 text-blue-500 rounded-lg hover:bg-blue-100 hover:text-blue-700 transition-colors duration-200"
+              onClick={() => navigate('/UploadVideo')}
+              className="px-6 py-2 text-sm bg-gradient-to-r from-blue-400 to-pink-400 text-white rounded-lg hover:from-blue-500 hover:to-pink-500 transition-colors duration-200"
             >
-              Iniciar sesión
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="px-4 py-2 text-sm bg-gradient-to-r from-blue-400 to-pink-400 text-white rounded-lg hover:from-blue-500 hover:to-pink-500 transition-colors duration-200"
-            >
-              ¡Regístrate para subir tu video!
+              Sube un video
             </button>
           </motion.div>
         </div>
@@ -163,4 +157,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default UserPage;
