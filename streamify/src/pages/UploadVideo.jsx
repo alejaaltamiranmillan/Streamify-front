@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Upload, X, Check, Film, AlignLeft, Tag, Clock } from 'lucide-react';
+import { Upload, X, Check, Film, AlignLeft, Clock } from 'lucide-react';
 
 const UploadVideo = () => {
   const [dragActive, setDragActive] = useState(false);
@@ -103,18 +103,6 @@ const UploadVideo = () => {
               </div>
 
               <div>
-                <label htmlFor="tags" className="text-blue-800 block mb-1">Etiquetas</label>
-                <div className="relative">
-                  <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500" />
-                  <input
-                    id="tags"
-                    className="pl-10 w-full border rounded-lg p-2"
-                    placeholder="Añade etiquetas separadas por comas"
-                  />
-                </div>
-              </div>
-
-              <div>
                 <label htmlFor="duration" className="text-blue-800 block mb-1">Duración</label>
                 <div className="relative">
                   <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500" />
@@ -128,7 +116,7 @@ const UploadVideo = () => {
             </div>
 
             <div className="flex justify-end space-x-4">
-              <Link href="/" passHref>
+              <Link to="/UserPage">
                 <button
                   type="button"
                   className="bg-white hover:bg-red-50 text-red-500 border-red-300 px-4 py-2 rounded-lg flex items-center"

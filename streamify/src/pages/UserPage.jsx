@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Menu, Play, Tv, Compass, Clock, ThumbsUp } from 'lucide-react';
+import { Search, Menu, Play, User, LogOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,42 +38,53 @@ const SidebarItem = ({ icon: Icon, text }) => (
   </motion.li>
 );
 
-const HeroSection = () => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    className="bg-gradient-to-r from-blue-200 to-pink-200 text-blue-800 py-20 px-4 rounded-3xl mb-8 shadow-xl"
-  >
-    <div className="max-w-4xl mx-auto text-center">
-      <motion.h2 
-        className="text-4xl md:text-6xl font-bold mb-4"
-        initial={{ y: -20 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
-      >
-        Descubre. Crea. Comparte.
-      </motion.h2>
-      <motion.p 
-        className="text-xl md:text-2xl mb-8 text-blue-600"
-        initial={{ y: 20 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.4, type: "spring", stiffness: 120 }}
-      >
-        Tu plataforma para explorar y compartir contenido increíble.
-      </motion.p>
-      <motion.div
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
-      >
-        <button className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
-          ¡Comienza a subir videos!
-        </button>
-      </motion.div>
-    </div>
-  </motion.div>
-);
+const HeroSection = () => {
+  const navigate = useNavigate();
+
+  const handleUploadRedirect = () => {
+    navigate('/UploadVideo');
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="bg-gradient-to-r from-blue-200 to-pink-200 text-blue-800 py-20 px-4 rounded-3xl mb-8 shadow-xl"
+    >
+      <div className="max-w-4xl mx-auto text-center">
+        <motion.h2 
+          className="text-4xl md:text-6xl font-bold mb-4"
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
+        >
+          Descubre. Crea. Comparte.
+        </motion.h2>
+        <motion.p 
+          className="text-xl md:text-2xl mb-8 text-blue-600"
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.4, type: "spring", stiffness: 120 }}
+        >
+          Tu plataforma para explorar y compartir contenido increíble.
+        </motion.p>
+        <motion.div
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
+        >
+          <button
+            onClick={handleUploadRedirect}
+            className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+          >
+            ¡Sube un video ahora!
+          </button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
 
 const UserPage = () => {
   const navigate = useNavigate();
@@ -86,6 +97,10 @@ const UserPage = () => {
   const videoCards = useMemo(() => {
     return videos.map((video) => <VideoCard key={video.id} video={video} />);
   }, [videos]);
+
+  const handleLogout = () => {
+    navigate('/HomePage');
+  };
 
   return (
     <div className="min-h-screen bg-blue-50 text-blue-900">
@@ -125,6 +140,13 @@ const UserPage = () => {
             >
               Sube un video
             </button>
+            <button
+              onClick={handleLogout}
+              className="px-6 py-2 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center space-x-2"
+            >
+              <LogOut size={16} />
+              <span>Cerrar sesión</span>
+            </button>
           </motion.div>
         </div>
       </header>
@@ -132,10 +154,7 @@ const UserPage = () => {
         <aside className="w-64 hidden md:block">
           <nav>
             <ul className="space-y-2">
-              <SidebarItem icon={Tv} text="Inicio" />
-              <SidebarItem icon={Compass} text="Explorar" />
-              <SidebarItem icon={Clock} text="Historial" />
-              <SidebarItem icon={ThumbsUp} text="Favoritos" />
+              <SidebarItem icon={User} text="Mi perfil" />
             </ul>
           </nav>
         </aside>

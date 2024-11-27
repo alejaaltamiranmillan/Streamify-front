@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import UserPage from './pages/UserPage';
 import UploadVideo from './pages/UploadVideo';
+import React from 'react';
 
 function App() {
 
@@ -25,3 +26,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Menu, Play, Tv, Compass, Clock, ThumbsUp } from 'lucide-react';
+import { Search, Menu, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,42 +38,49 @@ const SidebarItem = ({ icon: Icon, text }) => (
   </motion.li>
 );
 
-const HeroSection = () => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    className="bg-gradient-to-r from-blue-200 to-pink-200 text-blue-800 py-20 px-4 rounded-3xl mb-8 shadow-xl"
-  >
-    <div className="max-w-4xl mx-auto text-center">
-      <motion.h2 
-        className="text-4xl md:text-6xl font-bold mb-4"
-        initial={{ y: -20 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
-      >
-        Descubre. Crea. Comparte.
-      </motion.h2>
-      <motion.p 
-        className="text-xl md:text-2xl mb-8 text-blue-600"
-        initial={{ y: 20 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.4, type: "spring", stiffness: 120 }}
-      >
-        Tu plataforma para explorar y compartir contenido increíble.
-      </motion.p>
-      <motion.div
-        initial={{ scale: 0.8 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
-      >
-        <button className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200">
-          Comienza tu aventura
-        </button>
-      </motion.div>
-    </div>
-  </motion.div>
-);
+const HeroSection = () => {
+  const navigate = useNavigate();
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="bg-gradient-to-r from-blue-200 to-pink-200 text-blue-800 py-20 px-4 rounded-3xl mb-8 shadow-xl"
+    >
+      <div className="max-w-4xl mx-auto text-center">
+        <motion.h2 
+          className="text-4xl md:text-6xl font-bold mb-4"
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
+        >
+          Descubre. Crea. Comparte.
+        </motion.h2>
+        <motion.p 
+          className="text-xl md:text-2xl mb-8 text-blue-600"
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.4, type: "spring", stiffness: 120 }}
+        >
+          Tu plataforma para explorar y compartir contenido increíble.
+        </motion.p>
+        <motion.div
+          initial={{ scale: 0.8 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
+        >
+          <button
+            onClick={() => navigate('/login')}
+            className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+          >
+            Comienza tu aventura
+          </button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+};
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -135,16 +142,6 @@ const HomePage = () => {
         </div>
       </header>
       <div className="container mx-auto px-4 py-8 flex">
-        <aside className="w-64 hidden md:block">
-          <nav>
-            <ul className="space-y-2">
-              <SidebarItem icon={Tv} text="Inicio" />
-              <SidebarItem icon={Compass} text="Explorar" />
-              <SidebarItem icon={Clock} text="Historial" />
-              <SidebarItem icon={ThumbsUp} text="Favoritos" />
-            </ul>
-          </nav>
-        </aside>
         <main className="flex-1">
           <HeroSection />
           <AnimatePresence>
