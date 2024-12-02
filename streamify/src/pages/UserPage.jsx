@@ -1,112 +1,220 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Menu, Play, User, LogOut } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { Search, Menu, Play, User, LogOut, AlertCircle, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-
-const VideoCard = ({ video }) => (
-  <motion.div
-    whileHover={{ scale: 1.05, y: -10 }}
-    whileTap={{ scale: 0.95 }}
-    className="bg-gradient-to-br from-blue-100 to-pink-100 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl"
-  >
-    <div className="relative">
-      <img src={video.thumbnail} alt={video.title} className="w-full h-48 object-cover" />
-      <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-        <motion.div
-          whileHover={{ scale: 1.2, rotate: 90 }}
-          whileTap={{ scale: 0.8 }}
-        >
-          <Play className="text-blue-500 w-12 h-12" />
-        </motion.div>
-      </div>
-    </div>
-    <div className="p-4">
-      <h3 className="text-lg font-semibold text-blue-800 mb-2">{video.title}</h3>
-      <p className="text-sm text-blue-600">1.2M vistas • hace 2 días</p>
-    </div>
-  </motion.div>
-);
-
-const SidebarItem = ({ icon: Icon, text }) => (
-  <motion.li
-    whileHover={{ scale: 1.05, x: 5 }}
-    whileTap={{ scale: 0.95 }}
-    className="flex items-center space-x-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors duration-200"
-  >
-    <Icon className="text-blue-500" />
-    <span className="text-blue-700">{text}</span>
-  </motion.li>
-);
-
-const HeroSection = () => {
-  const navigate = useNavigate();
-
-  const handleUploadRedirect = () => {
-    navigate('/UploadVideo');
-  };
-
-  return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className="bg-gradient-to-r from-blue-200 to-pink-200 text-blue-800 py-20 px-4 rounded-3xl mb-8 shadow-xl"
-    >
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.h2 
-          className="text-4xl md:text-6xl font-bold mb-4"
-          initial={{ y: -20 }}
-          animate={{ y: 0 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 120 }}
-        >
-          Descubre. Crea. Comparte.
-        </motion.h2>
-        <motion.p 
-          className="text-xl md:text-2xl mb-8 text-blue-600"
-          initial={{ y: 20 }}
-          animate={{ y: 0 }}
-          transition={{ delay: 0.4, type: "spring", stiffness: 120 }}
-        >
-          Tu plataforma para explorar y compartir contenido increíble.
-        </motion.p>
-        <motion.div
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.6, type: "spring", stiffness: 120 }}
-        >
-          <button
-            onClick={handleUploadRedirect}
-            className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
-          >
-            ¡Sube un video ahora!
-          </button>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-};
+import { getUserVideos } from '../services/Api';
 
 const UserPage = () => {
   const navigate = useNavigate();
-  const [videos] = useState([
-    { id: 1, title: 'Cómo hacer un pastel', thumbnail: '/placeholder.svg?height=120&width=200' },
-    { id: 2, title: 'Tutorial de React', thumbnail: '/placeholder.svg?height=120&width=200' },
-    { id: 3, title: 'Viaje a Machu Picchu', thumbnail: '/placeholder.svg?height=120&width=200' },
-  ]);
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const videoCards = useMemo(() => {
-    return videos.map((video) => <VideoCard key={video.id} video={video} />);
-  }, [videos]);
+  useEffect(() => {
+    const fetchUserVideos = async () => {
+      try {
+        const userVideos = await getUserVideos();
+        setVideos(userVideos);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error al cargar los videos:', err);
+        setError('No se pudieron cargar los videos');
+        setLoading(false);
+      }
+    };
+
+    fetchUserVideos();
+  }, []);
 
   const handleLogout = () => {
-    navigate('/HomePage');
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
+  const VideoCard = ({ video }) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [error, setError] = useState(null);
+    const [showUrl, setShowUrl] = useState(false);
+    const videoRef = useRef(null);
+
+    const togglePlay = () => {
+      if (videoRef.current) {
+        if (isPlaying) {
+          videoRef.current.pause();
+        } else {
+          videoRef.current.play().catch(e => {
+            console.error("Error playing video:", e);
+            setError(`Error al reproducir el video: ${e.message}`);
+          });
+        }
+        setIsPlaying(!isPlaying);
+      }
+    };
+
+    const handleVideoError = (e) => {
+      console.error("Error loading video:", e);
+      const errorDetails = {
+        message: e.message,
+        type: e.type,
+        target: {
+          src: e.target.src,
+          currentSrc: e.target.currentSrc,
+          error: e.target.error ? {
+            code: e.target.error.code,
+            message: e.target.error.message
+          } : 'No error details available'
+        }
+      };
+      setError(`Error al cargar el video: ${JSON.stringify(errorDetails, null, 2)}`);
+    };
+
+    useEffect(() => {
+      const checkVideoUrl = async () => {
+        try {
+          const proxyUrl = `/s3${new URL(video.url).pathname}`;
+          console.log("Attempting to fetch video from:", proxyUrl);
+          const response = await fetch(proxyUrl, { method: 'HEAD' });
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          console.log("Video URL is valid:", proxyUrl);
+          console.log("Response headers:", Object.fromEntries(response.headers));
+        } catch (e) {
+          console.error("Error checking video URL:", e);
+          setError(`Error al verificar la URL del video: ${e.message}`);
+        }
+      };
+
+      checkVideoUrl();
+    }, [video.url]);
+
+    return (
+      <motion.div
+        whileHover={{ scale: 1.05, y: -10 }}
+        whileTap={{ scale: 0.95 }}
+        className="bg-gradient-to-br from-blue-100 to-pink-100 rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl"
+      >
+        <div className="relative">
+          {error ? (
+            <div className="w-full h-48 flex flex-col items-center justify-center bg-gray-200 text-red-500 p-4">
+              <AlertCircle className="w-8 h-8 mb-2" />
+              <p className="text-center text-xs overflow-auto max-h-32">{error}</p>
+            </div>
+          ) : (
+            <>
+              <video 
+                ref={videoRef}
+                src={`/s3${new URL(video.url).pathname}`}
+                className="w-full h-48 object-cover" 
+                onClick={togglePlay}
+                onError={handleVideoError}
+              />
+              {!isPlaying && (
+                <div 
+                  className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center cursor-pointer"
+                  onClick={togglePlay}
+                >
+                  <motion.div 
+                    whileHover={{ scale: 1.2, rotate: 90 }} 
+                    whileTap={{ scale: 0.8 }}
+                  >
+                    <Play className="text-white w-12 h-12" />
+                  </motion.div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+        <div className="p-4">
+          <h3 className="text-lg font-semibold text-blue-800 mb-2">{video.name}</h3>
+          <div className="text-sm text-blue-600 space-y-1">
+            <p>Duración: {video.duration}</p>
+            <p>Subido el: {new Date(video.createdAt).toLocaleDateString()}</p>
+          </div>
+          <button
+            onClick={() => {
+              console.log('URL del video:', video.url);
+              setShowUrl(!showUrl);
+            }}
+            className="mt-2 text-sm text-blue-500 hover:text-blue-700"
+          >
+            {showUrl ? 'Ocultar URL' : 'Mostrar URL'}
+          </button>
+          {showUrl && (
+            <p className="mt-1 text-xs text-gray-500 break-all">{video.url}</p>
+          )}
+        </div>
+      </motion.div>
+    );
+  };
+
+  const videoCards = useMemo(() => {
+    return videos.map((video) => <VideoCard key={video._id} video={video} />);
+  }, [videos]);
+
+  const SidebarItem = ({ icon: Icon, text }) => (
+    <motion.li
+      whileHover={{ scale: 1.05, x: 5 }}
+      whileTap={{ scale: 0.95 }}
+      className="flex items-center space-x-4 p-2 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors duration-200"
+    >
+      <Icon className="text-blue-500" />
+      <span className="text-blue-700">{text}</span>
+    </motion.li>
+  );
+
+  const HeroSection = () => {
+    const handleUploadRedirect = () => {
+      navigate('/UploadVideo');
+    };
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-gradient-to-r from-blue-200 to-pink-200 text-blue-800 py-20 px-4 rounded-3xl mb-8 shadow-xl"
+      >
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h2
+            className="text-4xl md:text-6xl font-bold mb-4"
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
+          >
+            Descubre. Crea. Comparte.
+          </motion.h2>
+          <motion.p
+            className="text-xl md:text-2xl mb-8 text-blue-600"
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
+            transition={{ delay: 0.4, type: 'spring', stiffness: 120 }}
+          >
+            Tu plataforma para explorar y compartir contenido increíble.
+          </motion.p>
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.6, type: 'spring', stiffness: 120 }}
+          >
+            <button
+              onClick={handleUploadRedirect}
+              className="px-6 py-2 text-lg bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200"
+            >
+              ¡Sube un video ahora!
+            </button>
+          </motion.div>
+        </div>
+      </motion.div>
+    );
   };
 
   return (
     <div className="min-h-screen bg-blue-50 text-blue-900">
       <header className="bg-white shadow-lg">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <motion.div 
+          <motion.div
             className="flex items-center space-x-4"
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -128,7 +236,7 @@ const UserPage = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400" />
             </div>
           </div>
-          <motion.div 
+          <motion.div
             className="flex items-center space-x-4"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
@@ -160,16 +268,30 @@ const UserPage = () => {
         </aside>
         <main className="flex-1">
           <HeroSection />
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, staggerChildren: 0.1 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            >
-              {videoCards}
-            </motion.div>
-          </AnimatePresence>
+          {loading ? (
+            <div className="text-center py-8">
+              <p className="text-blue-500">Cargando videos...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-500">{error}</p>
+            </div>
+          ) : videos.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-blue-500">No has subido ningún video aún</p>
+            </div>
+          ) : (
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, staggerChildren: 0.1 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              >
+                {videoCards}
+              </motion.div>
+            </AnimatePresence>
+          )}
         </main>
       </div>
     </div>
@@ -177,3 +299,4 @@ const UserPage = () => {
 };
 
 export default UserPage;
+

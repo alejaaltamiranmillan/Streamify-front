@@ -54,5 +54,55 @@ export const isAuthenticated = () => {
   return !!localStorage.getItem('token');
 };
 
-export { api };
+// Función para subir un video
+export const UploadVideo = async (formData, onProgress) => {
+  try {
+    // Obtener el token almacenado
+    const token = localStorage.getItem('token');
 
+    // Verificar si el token existe
+    if (!token) {
+      throw new Error('No autorizado. Usuario no autenticado.');
+    }
+
+    const response = await api.post('/UploadVideo', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`, // Añadir el token de autorización
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onProgress(percentCompleted);
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error en la subida del video:', error);
+    throw error;
+  }
+};
+
+// Función para obtener los videos del usuario
+export const getUserVideos = async () => {
+  try {
+    // Obtener el token almacenado
+    const token = localStorage.getItem('token');
+
+    // Verificar si el token existe
+    if (!token) {
+      throw new Error('No autorizado. Usuario no autenticado.');
+    }
+
+    const response = await api.get('/UserVideos', {
+      headers: {
+        Authorization: `Bearer ${token}`, // Añadir el token de autorización
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener los videos del usuario:', error);
+    throw error;
+  }
+};
+
+export { api };

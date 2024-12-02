@@ -13,8 +13,7 @@ function App() {
     <Routes>
       {/* Error Display */}
       <Route path="*" element={<h1>Error 404</h1>} />
-      <Route path="/" element={<HomePage />} />
-      <Route path="/HomePage" element={<HomePage />} />
+      <Route path="/" element={<UserPage />} />
       <Route path='/login' element={<Login/>}/>
       <Route path='/UserPage' element={<UserPage/>}/>
       <Route path='/UploadVideo' element={<UploadVideo/>}/>
